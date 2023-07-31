@@ -2,10 +2,12 @@ import socket
 import sys
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
 
 ########################################################################
-MAX_WORKERS = 20    # MAX CONCURRENT REQUESTS
+MAX_WORKERS = 1    # MAX CONCURRENT REQUESTS
 VERBOSE = False     # False - TO DO
+DELAY = 0.3
 ########################################################################
 
 if len(sys.argv) == 1 :
@@ -60,18 +62,26 @@ def scanHostname(sub):
 		if ' getaddrinfo failed' in str(e) :
 			#print('Cannot resolve address')
 			pass
+	finally:
+		time.sleep(DELAY)
 
 def getIPof(hostname):
 	return socket.gethostbyname(hostname)
 
 def main():
-	if DEFAULT_FILE :
-		with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-			results = executor.map(scanHostname,DEFAULT_SUBDOMAINS)
+	# if DEFAULT_FILE :
+	# 	with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+	# 		results = executor.map(scanHostname,DEFAULT_SUBDOMAINS)
 
+	# if USING_FILE :
+	# 	with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor2:
+	# 		results = executor2.map(scanHostname,FILE_CONTENT)
+	if DEFAULT_FILE :
+		for sub in DEFAULT_SUBDOMAINS :
+			scanHostname(sub)
 	if USING_FILE :
-		with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor2:
-			results = executor2.map(scanHostname,FILE_CONTENT)
+		for sub in FILE_CONTENT :
+			scanHostname(sub)
 
 
 main()
