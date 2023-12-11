@@ -94,5 +94,5 @@ print("--------------------------------")
 if len(RESULT) == 0 :
     print("No IP could be found")
 else :
-    for value in RESULT.values() :
-        print(value + '  -->  ' + RESULT[value])
+    for key in RESULT.keys() :
+        print(key + '  -->  ' + RESULT[key])
